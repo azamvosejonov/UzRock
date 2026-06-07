@@ -52,6 +52,7 @@ class UserOut(BaseModel):
     is_seller: bool
     is_admin: bool
     is_on_vacation: bool
+    auto_reply: Optional[str] = None
     total_sales: int
     response_time: int
     rating: float
@@ -358,3 +359,116 @@ class PaymentMethodOut(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+# ============================================================
+#  EXTENDED SCHEMAS
+# ============================================================
+
+class UserUpdate(BaseModel):
+    avatar_url: Optional[str] = None
+    is_on_vacation: Optional[bool] = None
+    auto_reply: Optional[str] = None
+
+
+class SellerBrief(BaseModel):
+    """Seller info shown on product cards."""
+    id: UUID
+    username: str
+    avatar_url: Optional[str] = None
+    rating: float
+    total_sales: int
+    response_time: int
+    is_on_vacation: bool
+    last_online: datetime
+
+    class Config:
+        from_attributes = True
+
+
+class ProductCard(BaseModel):
+    """Compact product for listing pages (includes seller info)."""
+    id: UUID
+    seller_id: UUID
+    game_id: UUID
+    subcategory_id: UUID
+    title: str
+    price: Decimal
+    original_price: Optional[Decimal] = None
+    discount_percent: Optional[int] = None
+    is_auto_delivery: bool
+    is_highlighted: bool
+    delivery_method: Optional[str] = None
+    views: int
+    review_count: int
+    images: List[ProductImageOut] = []
+    raised_at: datetime
+    created_at: datetime
+
+    class Config:
+        from_attributes = True
+
+
+class BalanceDeposit(BaseModel):
+    amount: Decimal = Field(..., gt=0)
+    payment_method: str = Field(..., description="click | payme | usdt")
+
+
+class DisputeResolve(BaseModel):
+    winner: str = Field(..., description="buyer yoki seller")
+    resolution_note: str
+
+
+class WithdrawalStatusUpdate(BaseModel):
+    status: str = Field(..., description="APPROVED yoki REJECTED")
+    admin_note: Optional[str] = None
+
+
+class AdminStats(BaseModel):
+    total_users: int
+    total_sellers: int
+    total_products: int
+    total_orders: int
+    total_revenue: Decimal
+    open_disputes: int
+    pending_withdrawals: int
+
+
+class SuccessResponse(BaseModel):
+    success: bool = True
+    message: str = "OK"
+
+
+class FavoriteOut(BaseModel):
+    product_id: UUID
+    created_at: datetime
+
+    class Config:
+        from_attributes = True
+
+
+class ClickPrepareRequest(BaseModel):
+    click_trans_id: int
+    service_id: int
+    click_paydoc_id: int
+    merchant_trans_id: str
+    amount: float
+    action: int
+    error: int
+    error_note: str
+    sign_time: str
+    sign_string: str
+
+
+class ClickPrepareResponse(BaseModel):
+    click_trans_id: int
+    merchant_trans_id: str
+    merchant_prepare_id: Optional[int] = None
+    error: int
+    error_note: str
+
+
+class PaymeRequest(BaseModel):
+    method: str
+    params: Dict[str, Any]
+    id: int = 1
