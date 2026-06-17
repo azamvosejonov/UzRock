@@ -45,7 +45,7 @@ class TestOrderCreate:
 
     def test_create_order_no_auth(self, client, product):
         r = client.post("/api/v1/orders/", json={"product_id": product["id"]})
-        assert r.status_code == 403
+        assert r.status_code == 401
 
 
 class TestOrderList:

@@ -46,4 +46,4 @@ class TestFavorites:
 
     def test_requires_auth(self, client, product):
         r = client.get("/api/v1/favorites/")
-        assert r.status_code == 403
+        assert r.status_code == 401

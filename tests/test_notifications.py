@@ -37,7 +37,7 @@ class TestNotificationList:
 
     def test_requires_auth(self, client):
         r = client.get("/api/v1/notifications/")
-        assert r.status_code == 403
+        assert r.status_code == 401
 
 
 class TestUnreadCount:

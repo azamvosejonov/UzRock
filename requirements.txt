@@ -14,6 +14,7 @@ python-multipart>=0.0.12         # file uploads (avatars, product images)
 # ── Authentication ────────────────────────────────────────────
 python-jose[cryptography]>=3.3.0 # JWT tokens
 passlib[bcrypt]>=1.7.4           # password hashing
+bcrypt==4.0.1
 
 # ── Real-time (Chat / Notifications) ─────────────────────────
 websockets>=13.0                 # WebSocket support

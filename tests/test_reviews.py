@@ -33,6 +33,24 @@ class TestReviewCreate:
         )
         assert r.status_code == 403
 
+    def test_create_review_invalid_rating_low(self, client, funded_buyer, completed_order):
+        r = client.post(
+            "/api/v1/reviews/",
+            params={"order_id": completed_order["id"]},
+            json={"rating": 0},
+            headers=auth(funded_buyer),
+        )
+        assert r.status_code == 422
+
+    def test_create_review_invalid_rating_high(self, client, funded_buyer, completed_order):
+        r = client.post(
+            "/api/v1/reviews/",
+            params={"order_id": completed_order["id"]},
+            json={"rating": 6},
+            headers=auth(funded_buyer),
+        )
+        assert r.status_code == 422
+
     def test_duplicate_review_fails(self, client, funded_buyer, completed_order):
         client.post(
             "/api/v1/reviews/",

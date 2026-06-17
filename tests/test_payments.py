@@ -57,7 +57,7 @@ class TestTopup:
 
     def test_topup_requires_auth(self, client):
         r = client.post("/api/v1/payments/topup", params={"amount": "1000", "method": "click"})
-        assert r.status_code == 403
+        assert r.status_code == 401
 
 
 class TestClickPrepare:

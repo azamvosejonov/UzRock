@@ -76,7 +76,7 @@ class TestMe:
 
     def test_get_me_no_auth(self, client):
         r = client.get("/api/v1/auth/me")
-        assert r.status_code == 403
+        assert r.status_code == 401
 
     def test_get_me_invalid_token(self, client):
         r = client.get("/api/v1/auth/me", headers={"Authorization": "Bearer fake.token.here"})

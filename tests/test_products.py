@@ -141,6 +141,24 @@ class TestProductCreate:
         assert r.status_code == 201
         assert r.json()["dynamic_attributes"]["platform"] == "PC"
 
+    def test_create_product_missing_fields(self, client, seller_token, game, subcategory):
+        # Title is required, leaving it out (incomplete data)
+        r = client.post("/api/v1/products/", json={
+            "price": "25.00",
+            "game_id": game["id"], "subcategory_id": subcategory["id"],
+            "is_auto_delivery": True,
+        }, headers=auth(seller_token))
+        assert r.status_code == 422
+
+    def test_create_product_invalid_price(self, client, seller_token, game, subcategory):
+        # Price must be > 0 (invalid/wrong data)
+        r = client.post("/api/v1/products/", json={
+            "title": "Invalid Price Game", "price": "0.00",
+            "game_id": game["id"], "subcategory_id": subcategory["id"],
+            "is_auto_delivery": True,
+        }, headers=auth(seller_token))
+        assert r.status_code == 422
+
 
 class TestProductUpdate:
     def test_update_own_product(self, client, seller_token, product):
